@@ -7,6 +7,9 @@ teams = pickle.load(open('team.pkl', 'rb'))
 cities = pickle.load(open('city.pkl', 'rb'))
 pipe = pickle.load(open('pipe.pkl', 'rb'))
 
+# Filter out any non-string values from cities (additional safety check)
+cities = [city for city in cities if isinstance(city, str)]
+
 st.title('IPL Win Predictor')
 
 col1, col2 = st.columns(2)
@@ -77,6 +80,4 @@ if st.button('Predict Probability'):
     except Exception as e:
         st.error(f"Error in prediction: {e}")
         st.write("Input DataFrame:")
-        st.write(input_df)
-        st.write("Input DataFrame dtypes:")
-        st.write(input_df.dtypes)
+        st.write

@@ -80,4 +80,6 @@ if st.button('Predict Probability'):
     except Exception as e:
         st.error(f"Error in prediction: {e}")
         st.write("Input DataFrame:")
-        st.write
+        st.write(input_df)
+        st.write("Input DataFrame dtypes:")
+        st.write(input_df.dtypes)

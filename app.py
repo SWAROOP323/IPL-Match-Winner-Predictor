@@ -31,51 +31,49 @@ col4, col5, col6 = st.columns(3)
 with col4:
     score = st.number_input('Score',min_value=0,max_value=720, step=1)
 with col5:
-    overs = st.number_input('Overs Done',min_value=0,max_value=20, step=1)
+    overs = st.number_input('Overs Done',min_value=0.0,max_value=20.0, step=0.1)
 with col6: 
     wickets = st.number_input('Wickets Fell',min_value=0,max_value=10, step=1)
 
 if st.button('Predict Probabilities'):
     runs_left = target - score
     balls_left = 120 - (overs * 6)
-    wickets = 10 - wickets
-    crr = score/overs
-    rrr = (runs_left*6)/balls_left
-
-    input_df = pd.DataFrame({'batting_team':[batting_team], 
-                            'bowling_team':[bowling_team], 
-                            'city':[selected_city], 
-                            'Score':[score],
-                            'Wickets':[wickets],
-                            'Remaining Balls':[balls_left], 
-                            'target_left':[runs_left], 
-                            'crr':[crr], 
-                            'rrr':[rrr]
-                            })
-    result = model.predict_proba(input_df)
-    loss = result[0][0]
-    win = result[0][1]
-    st.header(batting_team + " - " + str(round(win*100)) + "%")
-    st.header(bowling_team + " - " + str(round(loss*100)) + "%")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    wickets_left = 10 - wickets
     
+    # Handle division by zero for current run rate
+    if overs > 0:
+        crr = score/overs
+    else:
+        crr = 0
+    
+    # Handle division by zero for required run rate
+    if balls_left > 0:
+        rrr = (runs_left*6)/balls_left
+    else:
+        rrr = 0
 
+    # Create input DataFrame with the exact feature names and order expected by the model
+    input_df = pd.DataFrame({
+        'batting_team': [batting_team], 
+        'bowling_team': [bowling_team], 
+        'city': [selected_city], 
+        'Score': [score],
+        'Wickets': [wickets_left],
+        'Remaining Balls': [balls_left], 
+        'target_left': [runs_left], 
+        'crr': [crr], 
+        'rrr': [rrr]
+    })
+    
+    try:
+        result = model.predict_proba(input_df)
+        loss = result[0][0]
+        win = result[0][1]
+        st.header(batting_team + " - " + str(round(win*100)) + "%")
+        st.header(bowling_team + " - " + str(round(loss*100)) + "%")
+    except Exception as e:
+        st.error(f"Error in prediction: {str(e)}")
+        st.write("Input DataFrame:")
+        st.write(input_df)
+        st.write("Input DataFrame dtypes:")
+        st.write(input_df.dtypes)

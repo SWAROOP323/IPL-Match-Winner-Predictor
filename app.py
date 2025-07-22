@@ -33,53 +33,56 @@ with col5:
     wickets = st.number_input("Wickets out", min_value=0, max_value=10, value=2)
 
 if st.button("Predict Probability"):
-    try:
-        # Calculate remaining balls
-        balls_completed = int(overs * 6)
-        remaining_balls = 120 - balls_completed
-        
-        # Calculate wickets left (remaining wickets)
-        wickets_left = 10 - wickets
-        
-        # Calculate target left
-        target_left = target - score
-        
-        # Calculate current run rate (avoid division by zero)
-        if balls_completed > 0:
-            crr = (score * 6) / balls_completed
-        else:
-            crr = 0
-        
-        # Calculate required run rate (avoid division by zero)
-        if remaining_balls > 0:
-            rrr = (target_left * 6) / remaining_balls
-        else:
-            rrr = 0 if target_left <= 0 else float("inf")
-        
-        # Create input DataFrame with exact feature names expected by the model
-        input_df = pd.DataFrame({
-            "batting_team": [batting_team],
-            "bowling_team": [bowling_team], 
-            "city": [selected_city],
-            "Score": [score],
-            "Wickets": [wickets_left],
-            "Remaining Balls": [remaining_balls],
-            "target_left": [target_left],
-            "crr": [crr],
-            "rrr": [rrr]
-        })
-        
-        # Make prediction
-        result = pipe.predict_proba(input_df)
-        loss = result[0][0]
-        win = result[0][1]
-        
-        st.header(f"{batting_team} - {win*100:.1f}%")
-        st.header(f"{bowling_team} - {loss*100:.1f}%")
-        
-    except Exception as e:
-        st.error(f"Error in prediction: {e}")
-        st.write("Input DataFrame:")
-        st.write(input_df)
-        st.write("Input DataFrame dtypes:")
-        st.write(input_df.dtypes)
+    if batting_team == bowling_team:
+        st.error("Batting and Bowling team cannot be the same!")
+    else:
+        try:
+            # Calculate remaining balls
+            balls_completed = int(overs * 6)
+            remaining_balls = 120 - balls_completed
+            
+            # Calculate wickets left (remaining wickets)
+            wickets_left = 10 - wickets
+            
+            # Calculate target left
+            target_left = target - score
+            
+            # Calculate current run rate (avoid division by zero)
+            if balls_completed > 0:
+                crr = (score * 6) / balls_completed
+            else:
+                crr = 0
+            
+            # Calculate required run rate (avoid division by zero)
+            if remaining_balls > 0:
+                rrr = (target_left * 6) / remaining_balls
+            else:
+                rrr = 0 if target_left <= 0 else float("inf")
+            
+            # Create input DataFrame with exact feature names expected by the model
+            input_df = pd.DataFrame({
+                "batting_team": [batting_team],
+                "bowling_team": [bowling_team], 
+                "city": [selected_city],
+                "Score": [score],
+                "Wickets": [wickets_left],
+                "Remaining Balls": [remaining_balls],
+                "target_left": [target_left],
+                "crr": [crr],
+                "rrr": [rrr]
+            })
+            
+            # Make prediction
+            result = pipe.predict_proba(input_df)
+            loss = result[0][0]
+            win = result[0][1]
+            
+            st.header(f"{batting_team} - {win*100:.1f}%")
+            st.header(f"{bowling_team} - {loss*100:.1f}%")
+            
+        except Exception as e:
+            st.error(f"Error in prediction: {e}")
+            st.write("Input DataFrame:")
+            st.write(input_df)
+            st.write("Input DataFrame dtypes:")
+            st.write(input_df.dtypes)

@@ -21,7 +21,7 @@ with col2:
 
 selected_city = st.selectbox("Select host city", sorted(cities))
 
-target = st.number_input("Target", min_value=1, max_value=350, value=1)
+target = st.number_input("Target", min_value=1, max_value=350, value=150)
 
 col3, col4, col5 = st.columns(3)
 

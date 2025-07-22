@@ -21,16 +21,20 @@ with col2:
 
 selected_city = st.selectbox("Select host city", sorted(cities))
 
-target = st.number_input("Target", min_value=1, max_value=300, value=150)
+target = st.number_input("Target", min_value=1, max_value=350, value=0)
 
 col3, col4, col5 = st.columns(3)
 
 with col3:
-    score = st.number_input("Score", min_value=0, max_value=300, value=50)
+    score = st.number_input("Score", min_value=0, max_value=350, value=0)
 with col4:
-    overs = st.number_input("Overs completed", min_value=0.0, max_value=20.0, value=5.0, step=0.1)
+    # Cricket-specific overs input
+    overs_whole = st.number_input("Overs completed (whole number)", min_value=0, max_value=19, value=0)
+    balls = st.selectbox("Balls in current over", [0, 1, 2, 3, 4, 5], index=0)
+    overs = overs_whole + (balls / 10)  # Convert to decimal format (e.g., 5.3 for 5 overs 3 balls)
+    st.write(f"Total overs: {overs_whole}.{balls}")
 with col5:
-    wickets = st.number_input("Wickets out", min_value=0, max_value=10, value=2)
+    wickets = st.number_input("Wickets out", min_value=0, max_value=10, value=0)
 
 if st.button("Predict Probability"):
     if batting_team == bowling_team:
@@ -38,7 +42,7 @@ if st.button("Predict Probability"):
     else:
         try:
             # Calculate remaining balls
-            balls_completed = int(overs * 6)
+            balls_completed = overs_whole * 6 + balls
             remaining_balls = 120 - balls_completed
             
             # Calculate wickets left (remaining wickets)

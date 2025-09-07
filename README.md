@@ -81,7 +81,10 @@ The project relies on the following Python libraries:
 Contributions are welcome! Please feel free to open issues or submit pull requests.  
 
 ---
+# **📬 Contact**
 
-# 📜 License  
+💡 For questions, suggestions, or collaborations, reach out:
 
-This project is open-source and available under the **MIT License**.  
+GitHub: https://github.com/SWAROOP323
+
+Email: swaroopmanchala323@gmail.com

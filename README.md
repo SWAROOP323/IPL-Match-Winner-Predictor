@@ -85,6 +85,6 @@ Contributions are welcome! Please feel free to open issues or submit pull reques
 
 💡 For questions, suggestions, or collaborations, reach out:
 
-GitHub: https://github.com/SWAROOP323
+- GitHub: https://github.com/SWAROOP323
 
-Email: swaroopmanchala323@gmail.com
+- Email: swaroopmanchala323@gmail.com
